@@ -25,6 +25,7 @@ public class DeviceRemovedEventHandler implements HubEventHandler {
     public void handle(HubEvent event) {
         kafkaClient.send(hubEventTopic,
                 event.getHubId(),
+                event.getTimestamp(),
                 DeviceRemovedEventMapper.toAvro((DeviceRemovedEvent) event));
     }
 }

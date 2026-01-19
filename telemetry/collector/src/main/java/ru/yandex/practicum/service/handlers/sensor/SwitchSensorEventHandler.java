@@ -25,6 +25,7 @@ public class SwitchSensorEventHandler implements SensorEventHandler {
     public void handle(SensorEvent event) {
         kafkaClient.send(sensorEventTopic,
                 event.getHubId(),
+                event.getTimestamp(),
                 SwitchSensorEventMapper.toAvro((SwitchSensorEvent) event));
     }
 }

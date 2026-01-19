@@ -25,6 +25,7 @@ public class TemperatureSensorEventHandler implements SensorEventHandler {
     public void handle(SensorEvent event) {
         kafkaClient.send(sensorEventTopic,
                 event.getHubId(),
+                event.getTimestamp(),
                 TemperatureSensorEventMapper.toAvro((TemperatureSensorEvent) event));
     }
 }

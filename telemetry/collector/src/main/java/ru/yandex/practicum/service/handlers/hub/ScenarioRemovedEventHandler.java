@@ -25,6 +25,7 @@ public class ScenarioRemovedEventHandler implements HubEventHandler {
     public void handle(HubEvent event) {
         kafkaClient.send(hubEventTopic,
                 event.getHubId(),
+                event.getTimestamp(),
                 ScenarioRemovedEventMapper.toAvro((ScenarioRemovedEvent) event));
     }
 }

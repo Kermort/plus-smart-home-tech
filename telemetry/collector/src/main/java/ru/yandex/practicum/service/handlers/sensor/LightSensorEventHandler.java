@@ -25,6 +25,7 @@ public class LightSensorEventHandler implements SensorEventHandler {
     public void handle(SensorEvent event) {
         kafkaClient.send(sensorEventTopic,
                 event.getHubId(),
+                event.getTimestamp(),
                 LightSensorEventMapper.toAvro((LightSensorEvent) event));
     }
 }

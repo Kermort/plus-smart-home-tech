@@ -25,6 +25,7 @@ public class DeviceAddedEventHandler implements HubEventHandler {
     public void handle(HubEvent event) {
         kafkaClient.send(hubEventTopic,
                          event.getHubId(),
+                         event.getTimestamp(),
                          DeviceAddedEventMapper.toAvro((DeviceAddedEvent) event));
     }
 }
