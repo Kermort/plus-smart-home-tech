@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.enums.SensorEventType;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.KafkaClient;
 import ru.yandex.practicum.mapper.sensor.MotionSensorEventMapper;
-import ru.yandex.practicum.model.sensor.MotionSensorEvent;
-import ru.yandex.practicum.model.sensor.SensorEvent;
+
+import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
@@ -22,10 +23,10 @@ public class MotionSensorEventHandler implements SensorEventHandler {
     }
 
     @Override
-    public void handle(SensorEvent event) {
+    public void handle(SensorEventProto event) {
         kafkaClient.send(sensorEventTopic,
                 event.getHubId(),
-                event.getTimestamp(),
-                MotionSensorEventMapper.toAvro((MotionSensorEvent) event));
+                Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()),
+                MotionSensorEventMapper.toAvro(event));
     }
 }

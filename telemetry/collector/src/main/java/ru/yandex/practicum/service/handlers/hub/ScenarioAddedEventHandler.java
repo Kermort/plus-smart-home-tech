@@ -5,10 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.enums.HubEventType;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.kafka.KafkaClient;
 import ru.yandex.practicum.mapper.hub.ScenarioAddedEventMapper;
-import ru.yandex.practicum.model.hub.HubEvent;
-import ru.yandex.practicum.model.hub.scenario.ScenarioAddedEvent;
+
+import java.time.Instant;
 
 @Slf4j
 @Component
@@ -24,10 +25,10 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
     }
 
     @Override
-    public void handle(HubEvent event) {
+    public void handle(HubEventProto event) {
         kafkaClient.send(hubEventTopic,
                          event.getHubId(),
-                         event.getTimestamp(),
-                         ScenarioAddedEventMapper.toAvro((ScenarioAddedEvent) event));
+                         Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()),
+                         ScenarioAddedEventMapper.toAvro(event));
     }
 }
