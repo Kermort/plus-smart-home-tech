@@ -1,19 +1,27 @@
 package ru.yandex.practicum.mapper.hub;
 
 import lombok.experimental.UtilityClass;
+import ru.yandex.practicum.grpc.telemetry.event.DeviceRemovedEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceRemovedEventAvro;
-import ru.yandex.practicum.model.hub.device.DeviceRemovedEvent;
+
+import java.time.Instant;
 
 @UtilityClass
 public class DeviceRemovedEventMapper {
-    public static HubEventAvro toAvro(DeviceRemovedEvent event) {
+    public static HubEventAvro toAvro(HubEventProto event) {
+        DeviceRemovedEventProto deviceRemovedEvent = event.getDeviceRemoved();
+
         DeviceRemovedEventAvro payload = DeviceRemovedEventAvro.newBuilder()
-                .setId(event.getId())
+                .setId(deviceRemovedEvent.getId())
                 .build();
+
+        Instant timestamp = Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos());
+
         return HubEventAvro.newBuilder()
                 .setHubId(event.getHubId())
-                .setTimestamp(event.getTimestamp())
+                .setTimestamp(timestamp)
                 .setPayload(payload)
                 .build();
     }

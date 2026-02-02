@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.enums.HubEventType;
 import ru.yandex.practicum.enums.SensorEventType;
-import ru.yandex.practicum.model.hub.HubEvent;
-import ru.yandex.practicum.model.sensor.SensorEvent;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.service.handlers.hub.HubEventHandler;
 import ru.yandex.practicum.service.handlers.sensor.SensorEventHandler;
 
@@ -30,21 +30,21 @@ public class CollectorServiceImpl implements CollectorService {
     }
 
     @Override
-    public void collectHubEvent(HubEvent hubEvent) {
+    public void collectHubEvent(HubEventProto hubEvent) {
         log.info("[Collector service] hub event: {}", hubEvent);
-        HubEventHandler handler = hubEventHandlers.get(hubEvent.getType());
+        HubEventHandler handler = hubEventHandlers.get(HubEventType.valueOf(hubEvent.getPayloadCase().name()));
         if (handler == null) {
-            throw new IllegalArgumentException("Не найден обработчик события для события " + hubEvent.getType());
+            throw new IllegalArgumentException("Не найден обработчик события для события " + hubEvent.getPayloadCase());
         }
         handler.handle(hubEvent);
     }
 
     @Override
-    public void collectSensorEvent(SensorEvent sensorEvent) {
+    public void collectSensorEvent(SensorEventProto sensorEvent) {
         log.info("[Collector service] sensor event: {}", sensorEvent);
-        SensorEventHandler handler = sensorEventHandlers.get(sensorEvent.getType());
+        SensorEventHandler handler = sensorEventHandlers.get(SensorEventType.valueOf(sensorEvent.getPayloadCase().name()));
         if (handler == null) {
-            throw new IllegalArgumentException("Не найден обработчик события для события " + sensorEvent.getType());
+            throw new IllegalArgumentException("Не найден обработчик события для события " + sensorEvent.getPayloadCase());
         }
         handler.handle(sensorEvent);
     }
