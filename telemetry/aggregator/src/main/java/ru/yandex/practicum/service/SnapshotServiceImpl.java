@@ -37,7 +37,7 @@ public class SnapshotServiceImpl implements SnapshotService {
             snapshotOpt = Optional.of(createSnapshot(event));
         } else {
             log.info("[Snapshot service] снэпшот для хаба hubId={} есть, необходимо проверить актуальность", event.getHubId());
-            snapshotOpt = updateSnapshotState(snapshotOpt.get(), event);
+            snapshotOpt = Optional.ofNullable(updateSnapshotState(snapshotOpt.get(), event));
         }
         return snapshotOpt;
     }
@@ -59,7 +59,7 @@ public class SnapshotServiceImpl implements SnapshotService {
                 .build();
     }
 
-    private Optional<SensorsSnapshotAvro> updateSnapshotState(SensorsSnapshotAvro snapshot, SensorEventAvro event) {
+    private SensorsSnapshotAvro updateSnapshotState(SensorsSnapshotAvro snapshot, SensorEventAvro event) {
         log.info("[Snapshot service] обработка события для устройства id={} хаба hubId={}, событие {}",
                 event.getId(), event.getHubId(), event.getPayload());
         log.info("[Snapshot service] сейчас в снапшоте hubId={} содержатся данные от датчиков с идентификаторами: {}",
@@ -68,11 +68,11 @@ public class SnapshotServiceImpl implements SnapshotService {
         SensorStateAvro oldState = snapshot.getSensorsState().get(event.getId());
         if (oldState != null && oldState.getTimestamp().isAfter(event.getTimestamp())) {
             log.info("[Snapshot service] время в снапшоте позже, чем в событии. Обновление снэпшота не требуется");
-            return Optional.empty();
+            return null;
         }
         if (oldState != null && oldState.getData().equals(event.getPayload())) {
             log.info("[Snapshot service] данные в снапшоте и событии одинаковые. Обновление снэпшота не требуется");
-            return Optional.empty();
+            return null;
         }
 
         Map<String, SensorStateAvro> updatedStates = new HashMap<>(snapshot.getSensorsState());
@@ -92,7 +92,7 @@ public class SnapshotServiceImpl implements SnapshotService {
         } else {
             log.info("[Snapshot service] Событие добавлено к снапшоту");
         }
-        return Optional.of(updatedSnapshot);
+        return updatedSnapshot;
     }
 
 }
