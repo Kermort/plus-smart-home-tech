@@ -35,12 +35,14 @@ public class ScenarioRemovedEventHandler implements HubEventHandler {
 
         Optional<Scenario> scenarioOpt = scenarioRepository.findByHubIdAndName(event.getHubId(), scenarioEvent.getName());
 
-        List<ScenarioCondition> scenarioConditionList = scenarioConditionsRepository.findByScenarioId(scenarioOpt.get().getId());
-        List<ScenarioAction> scenarioActionList = scenarioActionsRepository.findByScenarioId(scenarioOpt.get().getId());
+        if (scenarioOpt.isPresent()) {
+            List<ScenarioCondition> scenarioConditionList = scenarioConditionsRepository.findByScenarioId(scenarioOpt.get().getId());
+            List<ScenarioAction> scenarioActionList = scenarioActionsRepository.findByScenarioId(scenarioOpt.get().getId());
 
-        conditionRepository.deleteAllByIdInBatch(scenarioConditionList.stream().map(sc -> sc.getCondition().getId()).toList());
-        actionRepository.deleteAllByIdInBatch(scenarioActionList.stream().map(sa -> sa.getAction().getId()).toList());
-        scenarioRepository.deleteById(scenarioOpt.get().getId());
+            conditionRepository.deleteAllByIdInBatch(scenarioConditionList.stream().map(sc -> sc.getCondition().getId()).toList());
+            actionRepository.deleteAllByIdInBatch(scenarioActionList.stream().map(sa -> sa.getAction().getId()).toList());
+            scenarioRepository.deleteById(scenarioOpt.get().getId());
+        }
     }
 
 }
