@@ -1,0 +1,55 @@
+analyzer:
+  kafka:
+    consumer:
+      topics:
+        hubs-events: telemetry.hubs.v1
+        hub-snapshots: telemetry.snapshots.v1
+
+    properties:
+      bootstrap-servers: localhost:9092
+      group-id:
+        hubs: analyzer.hubs
+        snapshots: analyzer.snapshots
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer:
+        hubs: ru.yandex.practicum.kafka.telemetry.event.deserializer.HubEventDeserializer
+        snapshots: ru.yandex.practicum.kafka.telemetry.event.deserializer.SensorsSnapshotDeserializer
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:6541/postgres
+    username: postgres
+    password: password
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      dll-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: ERROR
+    org.hibernate: ERROR
+
+grpc:
+  client:
+    hub-router:
+      address: static://localhost:59090
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
