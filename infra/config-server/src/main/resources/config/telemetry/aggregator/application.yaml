@@ -1,0 +1,22 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+aggregator:
+  kafka:
+    producer:
+      properties:
+        bootstrap-servers: localhost:9092
+      topics:
+        consumer-subscription: "telemetry.sensors.v1"
+        producer-topic: "telemetry.snapshots.v1"
+
+    consumer:
+      properties:
+        bootstrap-servers: localhost:9092
+        group-id: telemetry.aggregator
+        auto-offset-reset: earliest
+        enable-auto-commit: false
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: ru.yandex.practicum.kafka.telemetry.event.deserializer.SensorEventDeserializer

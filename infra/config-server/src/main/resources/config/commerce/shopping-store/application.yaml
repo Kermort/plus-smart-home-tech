@@ -1,0 +1,36 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  application:
+    name: shopping-store
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:6541/postgres?currentSchema=store
+    username: postgres
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 0
+
+logging:
+  level:
+    root: INFO
+    ru.yandex.practicum.commerce.store: DEBUG
