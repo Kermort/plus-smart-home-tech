@@ -12,22 +12,16 @@ import ru.yandex.practicum.commerce.interaction.warehouse.dto.AddProductToWareho
 import ru.yandex.practicum.commerce.interaction.warehouse.dto.AddressDto;
 import ru.yandex.practicum.commerce.interaction.warehouse.dto.BookedProductsDto;
 import ru.yandex.practicum.commerce.interaction.warehouse.dto.NewProductInWarehouseRequest;
-import ru.yandex.practicum.commerce.interaction.warehouse.exception.NoSpecifiedProductInWarehouseException;
-import ru.yandex.practicum.commerce.interaction.warehouse.exception.ProductInShoppingCartLowQuantityInWarehouse;
-import ru.yandex.practicum.commerce.interaction.warehouse.exception.SpecifiedProductAlreadyInWarehouseException;
 
 public interface WarehouseOperations {
     @PutMapping
-    ResponseEntity<String> newProduct(@Valid @NotNull @RequestBody NewProductInWarehouseRequest request)
-            throws SpecifiedProductAlreadyInWarehouseException;
+    ResponseEntity<String> newProduct(@Valid @NotNull @RequestBody NewProductInWarehouseRequest request);
 
     @PostMapping("/check")
-    ResponseEntity<BookedProductsDto> checkProductsInCart(@Valid @NotNull @RequestBody ShoppingCartDto cartDto)
-            throws ProductInShoppingCartLowQuantityInWarehouse;
+    ResponseEntity<BookedProductsDto> checkProductsInCart(@Valid @NotNull @RequestBody ShoppingCartDto cartDto);
 
     @PostMapping("/add")
-    ResponseEntity<String> addProductToWarehouse(@Valid @NotNull @RequestBody AddProductToWarehouseRequest request)
-            throws NoSpecifiedProductInWarehouseException;
+    ResponseEntity<String> addProductToWarehouse(@Valid @NotNull @RequestBody AddProductToWarehouseRequest request);
 
     @GetMapping("/address")
     ResponseEntity<AddressDto> getAddress();
