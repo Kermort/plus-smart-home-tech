@@ -34,24 +34,21 @@ public class StoreController implements StoreOperations {
     }
 
     @Override
-    public ResponseEntity<ProductDto> addProduct(@Valid @NotNull @RequestBody ProductDto productDto)
-    throws ValidationException {
+    public ResponseEntity<ProductDto> addProduct(@Valid @NotNull @RequestBody ProductDto productDto) {
         log.debug("[Shopping store controller] PUT {} add product ", productDto);
         ProductDto result = storeService.addProduct(productDto);
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<ProductDto> updateProduct(@Valid @NotNull @RequestBody ProductDto productDto)
-    throws ValidationException, ProductNotFoundException {
+    public ResponseEntity<ProductDto> updateProduct(@Valid @NotNull @RequestBody ProductDto productDto) {
         log.debug("[Shopping store controller] POST update product {}", productDto);
         ProductDto result = storeService.updateProduct(productDto);
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<Boolean> removeProduct(@Valid @NotNull @RequestBody UUID uuid)
-    throws ProductNotFoundException {
+    public ResponseEntity<Boolean> removeProduct(@Valid @NotNull @RequestBody UUID uuid) {
         log.debug("[Shopping store controller] POST remove by ID {} ", uuid);
         Boolean result = storeService.removeProduct(uuid);
         return ResponseEntity.ok(result);
@@ -60,16 +57,14 @@ public class StoreController implements StoreOperations {
     @Override
     public ResponseEntity<Boolean> setQuantityState(@Valid @RequestBody(required = false) SetProductQuantityStateRequest fromBody,
                                     @RequestParam(required = false) UUID productId,
-                                    @RequestParam(required = false) QuantityState quantityState)
-    throws ValidationException, ProductNotFoundException {
+                                    @RequestParam(required = false) QuantityState quantityState) {
         log.debug("[Shopping store controller] POST set state request");
         Boolean result = storeService.setProductQuantityState(productId, quantityState, fromBody);
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<ProductDto> getProductById(@NotNull @PathVariable UUID productId)
-    throws ProductNotFoundException {
+    public ResponseEntity<ProductDto> getProductById(@NotNull @PathVariable UUID productId) {
         log.debug("[Shopping store controller] GET find by ID {} ", productId);
         ProductDto result = storeService.findProductById(productId);
         return ResponseEntity.ok(result);

@@ -26,6 +26,9 @@ spring:
   sql:
     init:
       mode: always
+eureka:
+  instance:
+    instance-id: "${spring.application.name}:${server.port}:${random.value}"
 
 server:
   port: 0

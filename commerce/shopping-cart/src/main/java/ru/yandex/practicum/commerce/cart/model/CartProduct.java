@@ -9,7 +9,7 @@ import java.util.UUID;
 @Table(name = "cart_product", schema = "carts")
 @Getter
 @Setter
-@EqualsAndHashCode(of = "cartId")
+@EqualsAndHashCode(of = {"cartId", "productId"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

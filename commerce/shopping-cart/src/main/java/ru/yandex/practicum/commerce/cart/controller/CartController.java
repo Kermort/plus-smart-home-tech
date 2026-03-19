@@ -39,18 +39,14 @@ public class CartController implements CartOperations {
     @Override
     public ResponseEntity<ShoppingCartDto> putProductIntoCart(
             @RequestParam String username,
-            @Valid @NotEmpty @NotNull @RequestBody Map<UUID, @Positive Integer> products)
-            throws NotAuthorizedUserException,
-            ValidationException,
-            ProductInShoppingCartLowQuantityInWarehouse,
-            NoSpecifiedProductInWarehouseException {
+            @Valid @NotEmpty @NotNull @RequestBody Map<UUID, @Positive Integer> products) {
         log.debug("[Cart controller] PUT product into the cart (username {}) ", username);
         ShoppingCartDto result = cartService.putProductIntoCart(username, products);
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<String> deactivateCart(@RequestParam String username) throws NotAuthorizedUserException {
+    public ResponseEntity<String> deactivateCart(@RequestParam String username) {
         log.debug("[Cart controller] deactivate cart for username {} ", username);
         cartService.deactivateCart(username);
         return ResponseEntity.ok("OK");
@@ -59,10 +55,7 @@ public class CartController implements CartOperations {
     @Override
     public ResponseEntity<ShoppingCartDto> removeProductsFromCart(
             @RequestParam String username,
-            @Valid @NotNull @NotEmpty @RequestBody List<UUID> products)
-            throws ValidationException,
-            NoProductInShoppingCartException,
-            NotAuthorizedUserException {
+            @Valid @NotNull @NotEmpty @RequestBody List<UUID> products) {
         log.debug("[Cart controller] remove products ({}) from cart for username {} ", products, username);
         ShoppingCartDto result = cartService.removeProductsFromCart(username, products);
         return ResponseEntity.ok(result);
@@ -71,8 +64,7 @@ public class CartController implements CartOperations {
     @Override
     public ResponseEntity<ShoppingCartDto> changeProductsQuantity(
             @RequestParam String username,
-            @Valid @NotNull @RequestBody ChangeProductQuantityRequest request)
-            throws NotAuthorizedUserException, NoProductInShoppingCartException{
+            @Valid @NotNull @RequestBody ChangeProductQuantityRequest request) {
         log.debug("[Cart controller] change product quantity ({}) ", request);
         ShoppingCartDto result = cartService.changeProductQuantity(username, request);
         return ResponseEntity.ok(result);

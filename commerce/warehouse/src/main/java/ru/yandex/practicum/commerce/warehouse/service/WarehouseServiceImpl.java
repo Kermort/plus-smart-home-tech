@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.commerce.interaction.cart.dto.ShoppingCartDto;
-import ru.yandex.practicum.commerce.interaction.warehouse.dto.AddProductToWarehouseRequest;
-import ru.yandex.practicum.commerce.interaction.warehouse.dto.AddressDto;
-import ru.yandex.practicum.commerce.interaction.warehouse.dto.BookedProductsDto;
-import ru.yandex.practicum.commerce.interaction.warehouse.dto.NewProductInWarehouseRequest;
+import ru.yandex.practicum.commerce.interaction.warehouse.dto.*;
 import ru.yandex.practicum.commerce.warehouse.mapper.ProductMapper;
+import ru.yandex.practicum.commerce.warehouse.model.Booking;
 import ru.yandex.practicum.commerce.warehouse.model.Product;
+import ru.yandex.practicum.commerce.warehouse.repository.BookingRepository;
 import ru.yandex.practicum.commerce.warehouse.repository.WarehouseRepository;
 import ru.yandex.practicum.commerce.interaction.warehouse.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.commerce.interaction.warehouse.exception.ProductInShoppingCartLowQuantityInWarehouse;
@@ -25,6 +25,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
+    private final BookingRepository bookingRepository;
 
     private static final String[] ADDRESSES =
             new String[] {"ADDRESS_1", "ADDRESS_2"};
@@ -51,18 +52,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public BookedProductsDto checkProductsFromCart(ShoppingCartDto cartDto) {
         log.debug("[Warehouse service] check products from cart in warehouse {} ", cartDto);
-        Set<UUID> productIds = cartDto.getProducts().keySet();
-        List<Product> productList = warehouseRepository.findAllById(productIds);
-
-        Optional<Product> missingProduct = productList.stream()
-                .filter(p -> p.getQuantity() < cartDto.getProducts().get(p.getProductId())).findFirst();
-
-        if (missingProduct.isPresent()) {
-            throw new ProductInShoppingCartLowQuantityInWarehouse(HttpStatus.BAD_REQUEST, "Product low quantity");
-        }
+        List<Product> productList = checkProductsInWarehouse(cartDto.getProducts());
 
         return calculateDeliveryParameters(productList);
-
     }
 
     @Override
@@ -86,6 +78,70 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .house(CURRENT_ADDRESS)
                 .flat(CURRENT_ADDRESS)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public BookedProductsDto assembly(AssemblyProductsForOrderRequest request) {
+        log.debug("[Warehouse service] assembly products for order {} ", request.getOrderId());
+        List<Product> products = checkProductsInWarehouse(request.getProducts());
+
+        for (Product p: products) {
+            p.setQuantity(p.getQuantity() - request.getProducts().get(p.getProductId()));
+        }
+
+        List<Product> updatedProducts = warehouseRepository.saveAll(products);
+
+        bookProducts(request.getProducts(), request.getOrderId());
+
+        return calculateDeliveryParameters(updatedProducts);
+    }
+
+    @Override
+    public void shippedToDelivery(ShippedToDeliveryRequest request) {
+        log.debug("[Warehouse service] shipped to delivery for order {} ", request.getOrderId());
+        List<Booking> bookings = bookingRepository.findByOrderId(request.getOrderId());
+
+        for (Booking b: bookings) {
+            b.setDeliveryId(request.getDeliveryId());
+        }
+    }
+
+    @Override
+    public void returnProducts(Map<UUID, Integer> request) {
+        log.debug("[Warehouse service] return products {} ", request);
+        List<Product> products = checkProductsInWarehouse(request);
+
+        for (Product p: products) {
+            p.setQuantity(p.getQuantity() + request.get(p.getProductId()));
+        }
+
+        warehouseRepository.saveAll(products);
+    }
+
+    private void bookProducts(Map<UUID, Integer> products, UUID orderId) {
+        List<Booking> bookings = products.entrySet().stream()
+                .map(e -> Booking.builder()
+                        .productId(e.getKey())
+                        .orderId(orderId)
+                        .quantity(e.getValue())
+                        .build()
+                ).toList();
+
+        bookingRepository.saveAll(bookings);
+    }
+
+    private List<Product> checkProductsInWarehouse(Map<UUID, Integer> products) {
+        Set<UUID> productIds = products.keySet();
+        List<Product> productList = warehouseRepository.findAllById(productIds);
+
+        Optional<Product> missingProduct = productList.stream()
+                .filter(p -> p.getQuantity() < products.get(p.getProductId())).findFirst();
+
+        if (missingProduct.isPresent()) {
+            throw new ProductInShoppingCartLowQuantityInWarehouse(HttpStatus.BAD_REQUEST, "Product low quantity");
+        }
+        return productList;
     }
 
     private BookedProductsDto calculateDeliveryParameters(List<Product> products) {
