@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ProductReturnRequest {
+    @NotNull
     private UUID orderId;
 
     @NotNull

@@ -1,6 +1,8 @@
 package ru.yandex.practicum.commerce.interaction.delivery.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,13 +20,17 @@ public class DeliveryDto {
     private UUID deliveryId;
 
     @NotNull
+    @Valid
     private AddressDto fromAddress;
 
     @NotNull
+    @Valid
     private AddressDto toAddress;
 
     @NotNull
     private UUID orderId;
 
+    @NotNull
+    @Size(max = 20)
     private DeliveryState deliveryState;
 }

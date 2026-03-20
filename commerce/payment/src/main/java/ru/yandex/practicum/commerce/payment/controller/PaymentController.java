@@ -28,35 +28,35 @@ public class PaymentController implements PaymentOperations {
     public ResponseEntity<PaymentDto> createPayment(@RequestBody @NotNull @Valid OrderDto orderDto) {
         log.debug("[Payment controller] create payment for order {} ", orderDto.getOrderId());
         PaymentDto result = paymentService.createPayment(orderDto);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @Override
     public ResponseEntity<BigDecimal> calculateTotalCost(@RequestBody @NotNull @Valid OrderDto orderDto) {
         log.debug("[Payment controller] calculate total cost for order {} ", orderDto.getOrderId());
         BigDecimal result = paymentService.calculateTotalCost(orderDto);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @Override
-    public ResponseEntity<String> refund(@RequestBody @NotNull UUID paymentId) {
+    public ResponseEntity<String> success(@RequestBody @NotNull UUID paymentId) {
         log.debug("[Payment controller] refund for payment {} ", paymentId);
-        paymentService.refund(paymentId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        paymentService.success(paymentId);
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
     }
 
     @Override
     public ResponseEntity<BigDecimal> calculateProductsCost(@RequestBody @NotNull @Valid OrderDto orderDto) {
         log.debug("[Payment controller] calculate products cost for order {} ", orderDto.getOrderId());
         BigDecimal result = paymentService.calculateProductsCost(orderDto);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @Override
     public ResponseEntity<String> failed(@RequestBody @NotNull UUID paymentId) {
         log.debug("[Payment controller] failed payment {} ", paymentId);
         paymentService.failed(paymentId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
     }
 
 }

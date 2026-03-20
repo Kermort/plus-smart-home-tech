@@ -8,6 +8,7 @@ import ru.yandex.practicum.commerce.interaction.cart.exception.NotAuthorizedUser
 import ru.yandex.practicum.commerce.interaction.general.exception.ErrorResponse;
 import ru.yandex.practicum.commerce.interaction.general.exception.ValidationException;
 import ru.yandex.practicum.commerce.interaction.order.exception.NoOrderFoundException;
+import ru.yandex.practicum.commerce.interaction.payment.exception.NotEnoughInfoInOrderToCalculateException;
 import ru.yandex.practicum.commerce.interaction.warehouse.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.commerce.interaction.warehouse.exception.ProductInShoppingCartLowQuantityInWarehouse;
 
@@ -56,6 +57,16 @@ public class ErrorHandler {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException e) {
+        log.warn("{} [{}]", e.getHttpStatus(), e.getMessage());
+        ErrorResponse response = ErrorResponse.builder()
+                .userMessage(e.getUserMessage())
+                .httpStatus(e.getHttpStatus().toString())
+                .build();
+        return ResponseEntity.status(e.getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(NotEnoughInfoInOrderToCalculateException.class)
+    public ResponseEntity<ErrorResponse> handleNotEnoughInfoInOrderToCalculateException(NotEnoughInfoInOrderToCalculateException e) {
         log.warn("{} [{}]", e.getHttpStatus(), e.getMessage());
         ErrorResponse response = ErrorResponse.builder()
                 .userMessage(e.getUserMessage())

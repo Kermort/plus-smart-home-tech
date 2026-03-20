@@ -18,8 +18,8 @@ public interface PaymentOperations {
     @PostMapping("/totalCost")
     ResponseEntity<BigDecimal> calculateTotalCost(@RequestBody @NotNull @Valid OrderDto orderDto);
 
-    @PostMapping("/refund")
-    ResponseEntity<String> refund(@RequestBody @NotNull UUID paymentId);
+    @PostMapping("/success")
+    ResponseEntity<String> success(@RequestBody @NotNull UUID paymentId);
 
     @PostMapping("/productCost")
     ResponseEntity<BigDecimal> calculateProductsCost(@RequestBody @NotNull @Valid OrderDto orderDto);

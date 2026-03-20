@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.commerce.cart.service.CartService;
@@ -30,10 +31,10 @@ public class CartController implements CartOperations {
     private final CartService cartService;
 
     @Override
-    public ResponseEntity<ShoppingCartDto> getActualCart(@RequestParam String username) throws NotAuthorizedUserException {
+    public ResponseEntity<ShoppingCartDto> getActualCart(@RequestParam String username) {
         log.debug("[Cart controller] GET actual cart by username {} ", username);
         ShoppingCartDto result = cartService.getActualCart(username);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @Override
@@ -42,14 +43,14 @@ public class CartController implements CartOperations {
             @Valid @NotEmpty @NotNull @RequestBody Map<UUID, @Positive Integer> products) {
         log.debug("[Cart controller] PUT product into the cart (username {}) ", username);
         ShoppingCartDto result = cartService.putProductIntoCart(username, products);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @Override
     public ResponseEntity<String> deactivateCart(@RequestParam String username) {
         log.debug("[Cart controller] deactivate cart for username {} ", username);
         cartService.deactivateCart(username);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
     }
 
     @Override
@@ -58,7 +59,7 @@ public class CartController implements CartOperations {
             @Valid @NotNull @NotEmpty @RequestBody List<UUID> products) {
         log.debug("[Cart controller] remove products ({}) from cart for username {} ", products, username);
         ShoppingCartDto result = cartService.removeProductsFromCart(username, products);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class CartController implements CartOperations {
             @Valid @NotNull @RequestBody ChangeProductQuantityRequest request) {
         log.debug("[Cart controller] change product quantity ({}) ", request);
         ShoppingCartDto result = cartService.changeProductQuantity(username, request);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }

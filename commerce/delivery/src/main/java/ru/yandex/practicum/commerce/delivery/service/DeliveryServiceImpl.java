@@ -2,6 +2,7 @@ package ru.yandex.practicum.commerce.delivery.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +24,20 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class DeliveryServiceImpl implements DeliveryService {
-    private final BigDecimal BASE_COST = BigDecimal.valueOf(5.0);
-    private final BigDecimal ADDRESS_1_COEFFICIENT = BigDecimal.valueOf(1.0);
-    private final BigDecimal ADDRESS_2_COEFFICIENT = BigDecimal.valueOf(2.0);
-    private final BigDecimal FRAGILE_COEFFICIENT = BigDecimal.valueOf(0.2);
-    private final BigDecimal WEIGHT_COEFFICIENT = BigDecimal.valueOf(0.3);
-    private final BigDecimal VOLUME_COEFFICIENT = BigDecimal.valueOf(0.2);
-    private final BigDecimal DISTANCE_COEFFICIENT = BigDecimal.valueOf(0.2);
+    @Value("${delivery.coefficients.baseCost}")
+    private BigDecimal BASE_COST;
+    @Value("${delivery.coefficients.address_1}")
+    private BigDecimal ADDRESS_1_COEFFICIENT;
+    @Value("${delivery.coefficients.address_2}")
+    private BigDecimal ADDRESS_2_COEFFICIENT;
+    @Value("${delivery.coefficients.fragile}")
+    private BigDecimal FRAGILE_COEFFICIENT;
+    @Value("${delivery.coefficients.weight}")
+    private BigDecimal WEIGHT_COEFFICIENT;
+    @Value("${delivery.coefficients.volume}")
+    private BigDecimal VOLUME_COEFFICIENT;
+    @Value("${delivery.coefficients.distance}")
+    private BigDecimal DISTANCE_COEFFICIENT;
 
     private final DeliveryRepository deliveryRepository;
     private final WarehouseFeignClient warehouseFeignClient;

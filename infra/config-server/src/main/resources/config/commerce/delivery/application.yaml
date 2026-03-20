@@ -37,3 +37,13 @@ logging:
   level:
     root: INFO
     ru.yandex.practicum.commerce.delivery: DEBUG
+
+delivery:
+  coefficients:
+    baseCost: "0.2"
+    address_1: "1.0"
+    address_2: "2.0"
+    fragile: "0.2"
+    weight: "0.3"
+    volume: "0.2"
+    distance: "0.2"

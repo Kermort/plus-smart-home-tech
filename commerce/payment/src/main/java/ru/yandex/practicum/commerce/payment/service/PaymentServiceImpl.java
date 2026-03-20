@@ -65,17 +65,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void refund(UUID paymentId) {
+    public void success(UUID paymentId) {
         log.debug("[Payment service] successful payment {} ", paymentId);
         Payment payment = getPaymentIfExists(paymentId);
 
         payment.setState(PaymentState.SUCCESS);
         paymentRepository.save(payment);
         orderFeignClient.paymentSuccess(payment.getOrderId());
-        //проверить существование платежа
-        //проверить существование заказа
-        //проверить статус заказа, вдруг он уже оплачен
-        //еще проверки?
+
     }
 
     @Override
@@ -111,10 +108,6 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
         orderFeignClient.paymentFailed(payment.getOrderId());
 
-        //проверить существование платежа
-        //проверить существование заказа
-        //проверить статус заказа, вдруг он уже оплачен
-        //еще проверки?
     }
 
     private Payment getPaymentIfExists(UUID paymentId) {
