@@ -17,13 +17,13 @@ public interface DeliveryOperations {
     ResponseEntity<DeliveryDto> createNewDelivery(@RequestBody @NotNull @Valid DeliveryDto deliveryDto);
 
     @PostMapping("/successful")
-    ResponseEntity<String> successful(@RequestBody @NotNull UUID deliveryId);
+    ResponseEntity<Void> successful(@RequestBody @NotNull UUID deliveryId);
 
     @PostMapping("/picked")
-    ResponseEntity<String> picked(@RequestBody @NotNull UUID deliveryId);
+    ResponseEntity<Void> picked(@RequestBody @NotNull UUID deliveryId);
 
     @PostMapping("/failed")
-    ResponseEntity<String> failed(@RequestBody @NotNull UUID deliveryId);
+    ResponseEntity<Void> failed(@RequestBody @NotNull UUID deliveryId);
 
     @PostMapping("/cost")
     ResponseEntity<BigDecimal> calculateCost(@RequestBody @Valid OrderDto orderDto);

@@ -27,10 +27,10 @@ public class WarehouseController implements WarehouseOperations {
     private final WarehouseService warehouseService;
 
     @Override
-    public ResponseEntity<String> newProduct(@Valid @NotNull @RequestBody NewProductInWarehouseRequest request) {
+    public ResponseEntity<Void> newProduct(@Valid @NotNull @RequestBody NewProductInWarehouseRequest request) {
         log.debug("[Warehouse controller] new product {} ", request);
         warehouseService.newProduct(request);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
@@ -41,10 +41,10 @@ public class WarehouseController implements WarehouseOperations {
     }
 
     @Override
-    public ResponseEntity<String> addProductToWarehouse(@Valid @NotNull @RequestBody AddProductToWarehouseRequest request) {
+    public ResponseEntity<Void> addProductToWarehouse(@Valid @NotNull @RequestBody AddProductToWarehouseRequest request) {
         log.debug("[Warehouse controller] add product to warehouse request {} ", request);
         warehouseService.addProduct(request);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
@@ -62,16 +62,16 @@ public class WarehouseController implements WarehouseOperations {
     }
 
     @Override
-    public ResponseEntity<String> shipped(@RequestBody @NotNull @Valid ShippedToDeliveryRequest request) {
+    public ResponseEntity<Void> shipped(@RequestBody @NotNull @Valid ShippedToDeliveryRequest request) {
         log.debug("[Warehouse controller] shipped to delivery request for order {} ", request.getOrderId());
         warehouseService.shippedToDelivery(request);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
-    public ResponseEntity<String> returnProducts(@RequestBody @NotNull @NotEmpty Map<UUID, Integer> request) {
+    public ResponseEntity<Void> returnProducts(@RequestBody @NotNull @NotEmpty Map<UUID, Integer> request) {
         log.debug("[Warehouse controller] return products {} ", request);
         warehouseService.returnProducts(request);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -32,24 +32,24 @@ public class DeliveryController implements DeliveryOperations {
     }
 
     @Override
-    public ResponseEntity<String> successful(@RequestBody @NotNull UUID deliveryId) {
+    public ResponseEntity<Void> successful(@RequestBody @NotNull UUID deliveryId) {
         log.debug("[Delivery controller] successful delivery {} ", deliveryId);
         deliveryService.successful(deliveryId);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
-    public ResponseEntity<String> picked(@RequestBody @NotNull UUID deliveryId) {
+    public ResponseEntity<Void> picked(@RequestBody @NotNull UUID deliveryId) {
         log.debug("[Delivery controller] delivery picked {} ", deliveryId);
         deliveryService.picked(deliveryId);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
-    public ResponseEntity<String> failed(@RequestBody @NotNull UUID deliveryId) {
+    public ResponseEntity<Void> failed(@RequestBody @NotNull UUID deliveryId) {
         log.debug("[Delivery controller] delivery failed {} ", deliveryId);
         deliveryService.failed(deliveryId);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override

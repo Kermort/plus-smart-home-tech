@@ -19,11 +19,11 @@ public interface PaymentOperations {
     ResponseEntity<BigDecimal> calculateTotalCost(@RequestBody @NotNull @Valid OrderDto orderDto);
 
     @PostMapping("/success")
-    ResponseEntity<String> success(@RequestBody @NotNull UUID paymentId);
+    ResponseEntity<Void> success(@RequestBody @NotNull UUID paymentId);
 
     @PostMapping("/productCost")
     ResponseEntity<BigDecimal> calculateProductsCost(@RequestBody @NotNull @Valid OrderDto orderDto);
 
     @PostMapping("/failed")
-    ResponseEntity<String> failed(@RequestBody @NotNull UUID paymentId);
+    ResponseEntity<Void> failed(@RequestBody @NotNull UUID paymentId);
 }

@@ -16,13 +16,13 @@ import java.util.UUID;
 
 public interface WarehouseOperations {
     @PutMapping
-    ResponseEntity<String> newProduct(@Valid @NotNull @RequestBody NewProductInWarehouseRequest request);
+    ResponseEntity<Void> newProduct(@Valid @NotNull @RequestBody NewProductInWarehouseRequest request);
 
     @PostMapping("/check")
     ResponseEntity<BookedProductsDto> checkProductsInCart(@Valid @NotNull @RequestBody ShoppingCartDto cartDto);
 
     @PostMapping("/add")
-    ResponseEntity<String> addProductToWarehouse(@Valid @NotNull @RequestBody AddProductToWarehouseRequest request);
+    ResponseEntity<Void> addProductToWarehouse(@Valid @NotNull @RequestBody AddProductToWarehouseRequest request);
 
     @GetMapping("/address")
     ResponseEntity<AddressDto> getAddress();
@@ -31,8 +31,8 @@ public interface WarehouseOperations {
     ResponseEntity<BookedProductsDto> assembly(@RequestBody @NotNull @Valid AssemblyProductsForOrderRequest request);
 
     @PostMapping("/shipped")
-    ResponseEntity<String> shipped(@RequestBody @NotNull @Valid ShippedToDeliveryRequest request);
+    ResponseEntity<Void> shipped(@RequestBody @NotNull @Valid ShippedToDeliveryRequest request);
 
     @PostMapping("/return")
-    ResponseEntity<String> returnProducts(@RequestBody @NotNull @NotEmpty Map<UUID, Integer> request);
+    ResponseEntity<Void> returnProducts(@RequestBody @NotNull @NotEmpty Map<UUID, Integer> request);
 }

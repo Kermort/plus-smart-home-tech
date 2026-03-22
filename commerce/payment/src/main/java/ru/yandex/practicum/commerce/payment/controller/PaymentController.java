@@ -39,10 +39,10 @@ public class PaymentController implements PaymentOperations {
     }
 
     @Override
-    public ResponseEntity<String> success(@RequestBody @NotNull UUID paymentId) {
+    public ResponseEntity<Void> success(@RequestBody @NotNull UUID paymentId) {
         log.debug("[Payment controller] refund for payment {} ", paymentId);
         paymentService.success(paymentId);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
@@ -53,10 +53,10 @@ public class PaymentController implements PaymentOperations {
     }
 
     @Override
-    public ResponseEntity<String> failed(@RequestBody @NotNull UUID paymentId) {
+    public ResponseEntity<Void> failed(@RequestBody @NotNull UUID paymentId) {
         log.debug("[Payment controller] failed payment {} ", paymentId);
         paymentService.failed(paymentId);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

@@ -47,10 +47,10 @@ public class CartController implements CartOperations {
     }
 
     @Override
-    public ResponseEntity<String> deactivateCart(@RequestParam String username) {
+    public ResponseEntity<Void> deactivateCart(@RequestParam String username) {
         log.debug("[Cart controller] deactivate cart for username {} ", username);
         cartService.deactivateCart(username);
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
