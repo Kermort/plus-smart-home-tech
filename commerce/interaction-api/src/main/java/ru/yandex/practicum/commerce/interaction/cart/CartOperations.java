@@ -23,7 +23,7 @@ public interface CartOperations {
                                                        @Positive Integer> products);
 
     @DeleteMapping
-    ResponseEntity<String> deactivateCart(@RequestParam String username);
+    ResponseEntity<Void> deactivateCart(@RequestParam String username);
 
     @PostMapping("/remove")
     ResponseEntity<ShoppingCartDto> removeProductsFromCart(

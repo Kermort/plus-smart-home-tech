@@ -1,0 +1,25 @@
+package ru.yandex.practicum.commerce.interaction.order.dto;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Map;
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProductReturnRequest {
+    @NotNull
+    private UUID orderId;
+
+    @NotNull
+    private Map<UUID, Integer> products;
+
+    @NotNull
+    private String username;
+}

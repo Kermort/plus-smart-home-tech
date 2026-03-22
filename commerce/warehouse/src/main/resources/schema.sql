@@ -9,3 +9,11 @@ CREATE TABLE IF NOT EXISTS warehouse.products (
     weight DECIMAL(10, 3) NOT NULL,
     quantity INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS warehouse.booking (
+    product_id UUID NOT NULL,
+    order_id UUID NOT NULL,
+    delivery_id UUID,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, product_id)
+);
